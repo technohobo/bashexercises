@@ -2,10 +2,10 @@
 
 ALPHABET=( {a..z} )
 NUMIN=()
-M=26
+M=${#ALPHABET[@]}
 
 showParams(){
-	echo "$FLAG $A $B $STR"
+	echo "$FLAG $A $B $INPUT"
 }
 
 showHelp(){
@@ -25,6 +25,7 @@ if [[ $# -ne 6 ]]; then
 fi
 
 # Parameter parsing
+# for whatever reason if the first parameter is with a "-" it gets read as n empty string by the script...
 if [[ "$1" != "e" && "$1" != "d" ]]; then
 	echo "Invalid parameters..."
 	showHelp
@@ -59,35 +60,42 @@ if [[ "$A" == "" || "$B" == "" ]]; then
 	exit 2
 fi
 
-STR="$6"
+INPUT="$6"
+OUTPUT=""
 
 # Testing parsing...
 # showParams
 
-
+# Convert INPUT to a list of numbers corresponding to each letter position in the alphabet
 for (( i=0; i<${#INPUT}; i++ )); do
-	CHAR=${INPUT:i:1}
+	CHAR="${INPUT:i:1}"
 
-	for (( j=0; j<${#ALPHABET[@]}; j++)); do
-		if [[ "${ALPHABET[j]}" == "$C" ]]; then
-			NUMIN+=( $(( $j+1 )) )
+	for (( j=0; j<$M; j++)); do
+		if [[ "${ALPHABET[j]}" == "$CHAR" ]]; then
+			NUMIN+=( $(( $j )) )
 			break
 		fi
 	done
 done
 
-for (( i=0; i<${NUMIN[@]}; i++ )); do
-	C=${NUMIN[i]}
-	I=0
+encrypt(){
+	for (( i=0; i<${#NUMIN[@]}; i++ )); do
+		CHAR=${NUMIN[i]}
 
-	for (( j=0; j<26 j++ )); do
-		if [[ "$C" == ${ALPHABET[j]} ]]; then
-			I=$j
-			break
-		fi
+		CHAR=$(( ( $A * $CHAR + $B ) % $M ))
+		OUTPUT+="${ALPHABET[$CHAR]}"
 	done
-	NUMIN[i]=$(( ( $A * $I + $B ) % $M ))
+}	
 
-done
+decrypt(){
+	echo
+}
 
-echo -n ${NUMIN[*]}
+if [[ "$FLAG" == "e" ]]; then
+	encrypt
+elif [[ "$FLAG" == "d" ]]; then
+	decrypt
+fi
+
+echo "$OUTPUT"
+exit 0
