@@ -3,15 +3,16 @@
 ALPHABET=( {a..z} )
 NUMIN=()
 M=${#ALPHABET[@]}
+DIVA=()
 
 showParams(){
 	echo "$FLAG $A $B $INPUT"
 }
 
 showHelp(){
-	echo "affinecipher.sh [-e|-d] -a NUM -b NUM STRING"
-	echo -e "\t-e \tEncrypt"
-	echo -e "\t-d \tDecrypt"
+	echo "affinecipher.sh [e|d] -a NUM -b NUM STRING"
+	echo -e "\te \tEncrypt"
+	echo -e "\td \tDecrypt"
 	echo -e "\t-a \tThe 'a' parameter"
 	echo -e "\t-b \tThe 'b' parameter"
 	echo -e "\tSTRING \tString that is to be encrypted/decrypted"
@@ -63,8 +64,13 @@ fi
 INPUT="$6"
 OUTPUT=""
 
-# Testing parsing...
-# showParams
+for (( i=2; i<$M; i++ )); do
+	if [[ `expr $A % $i` -eq 0 && `expr $M % $i` -eq 0 ]]; then
+		echo "A and M are not coprime!"
+		exit 3
+
+	fi
+done
 
 # Convert INPUT to a list of numbers corresponding to each letter position in the alphabet
 for (( i=0; i<${#INPUT}; i++ )); do
