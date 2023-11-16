@@ -8,6 +8,20 @@ B=$2
 M=26
 
 
+showHelp(){
+	echo "affinecipher.sh [-e|-d] -a NUM -b NUM STRING"
+	echo -e "\t-e \tEncrypt"
+	echo -e "\t-d \tDecrypt"
+	echo -e "\t-a \tThe 'a' parameter"
+	echo -e "\t-b \tThe 'b' parameter"
+	echo -e "\tSTRING \tString that is to be encrypted/decrypted"
+}
+
+if [[ $# -ne 6 ]]; then
+	showHelp
+	exit 1
+fi
+
 for (( i=0; i<${#INPUT}; i++ )); do
 	CHAR=${INPUT:i:1}
 
