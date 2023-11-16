@@ -1,12 +1,12 @@
 #!/bin/bash
 
-INPUT=$3
 ALPHABET=( {a..z} )
 NUMIN=()
-A=$1
-B=$2
 M=26
 
+showParams(){
+	echo "$FLAG $A $B $STR"
+}
 
 showHelp(){
 	echo "affinecipher.sh [-e|-d] -a NUM -b NUM STRING"
@@ -17,10 +17,53 @@ showHelp(){
 	echo -e "\tSTRING \tString that is to be encrypted/decrypted"
 }
 
+# Check parameter count
 if [[ $# -ne 6 ]]; then
 	showHelp
+	echo $A
 	exit 1
 fi
+
+# Parameter parsing
+if [[ "$1" != "e" && "$1" != "d" ]]; then
+	echo "Invalid parameters..."
+	showHelp
+	exit 2
+else
+	FLAG="$1"
+fi
+
+if [[ "$2" == "-a" ]]; then
+	A="$3"
+elif [[ "$2" == "-b" ]]; then
+	B="$3"
+else
+	echo "Invalid parameters..."
+	showHelp
+	exit 2
+fi
+
+if [[ "$4" == "-a" ]]; then
+	A="$5"
+elif [[ "$4" == "-b" ]]; then
+	B="$5"
+else
+	echo "Invalid parameters..."
+	showHelp
+	exit 2
+fi
+
+if [[ "$A" == "" || "$B" == "" ]]; then
+	echo "Invalid parameters..."
+	showHelp
+	exit 2
+fi
+
+STR="$6"
+
+# Testing parsing...
+# showParams
+
 
 for (( i=0; i<${#INPUT}; i++ )); do
 	CHAR=${INPUT:i:1}
