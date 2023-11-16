@@ -87,8 +87,28 @@ encrypt(){
 	done
 }	
 
+countMMI(){
+	for (( x=1; x<$M; x++ )); do
+		MMI=$(( ( $x * $A ) % $M ))
+
+		if [[ $MMI -eq 1 ]]; then
+			return $x
+		fi
+	done
+	return -1
+}
+
 decrypt(){
-	echo
+	countMMI
+	MMI=$?
+
+	for (( i=0; i<${#NUMIN[@]}; i++ )); do
+		CHAR=${NUMIN[i]}
+
+		CHAR=$(( $MMI * ( $CHAR - $B ) % $M ))
+		OUTPUT+="${ALPHABET[$CHAR]}"
+	done
+
 }
 
 if [[ "$FLAG" == "e" ]]; then
